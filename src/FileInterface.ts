@@ -73,14 +73,26 @@ export class LocalFileInterfaceProvider {
 
 	private async exportInDesktop(file: TFile): Promise<void> {
 		const blob = new Blob([await this.app.vault.readBinary(file)]);
+		const filename = this.getExportFilename(file);
 		const url = URL.createObjectURL(blob);
 		const tmpDownloadEl = document.body.createEl('a', {
 			href: url,
 		});
-		tmpDownloadEl.download = file.name;
+		tmpDownloadEl.download = filename;
 		tmpDownloadEl.click();
 		tmpDownloadEl.remove();
 		URL.revokeObjectURL(url);
+	}
+
+	private getExportFilename(file: TFile): string {
+		let filename = file.name;
+		if (this.plugin.settings.exportFolder) {
+			const folder = this.plugin.settings.exportFolder.trim();
+			if (folder.length > 0) {
+				filename = `${folder}/${filename}`;
+			}
+		}
+		return filename;
 	}
 
 	private exportInMobile(file: TFile) {

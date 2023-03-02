@@ -27,5 +27,18 @@ export class LocalFileInterfacePluginSettingTab extends PluginSettingTab {
 						this.plugin.saveSettings();
 					});
 			});
+
+		new Setting(containerEl)
+			.setName('Default export folder')
+			.setDesc('Specify the default export folder for exported items.')
+			.addText((text) =>
+				text
+					.setPlaceholder('Example: folder1/folder2')
+					.setValue(this.plugin.settings.exportFolder)
+					.onChange((value) => {
+						this.plugin.settings.exportFolder = value;
+						this.plugin.saveSettings();
+					})
+			);
 	}
 }
